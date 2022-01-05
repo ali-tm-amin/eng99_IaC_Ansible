@@ -110,5 +110,22 @@ ansible all -a "sudo apt-get upgrade -y" from controller vm
 - Check the app running on browser
 ![](/images/port3000.png)
 
+### Installing mongodb
+- Creating playbook file `sudo nano install_mongo.yml`
+![](/images/mongo_yml.png)
+- Check for any errors `ansible-playbook install_mongo.yml --syntax-check`
+- Run the playbook `ansible-playbook install_mongo.yml`
+- Check mongodb status `ansible db -a "systemctl status mongodb"`
+![](/images/mongodb_status.png)
+- Now ssh into db and configure mongodb `ssh vagrant@192.168.56.11`
+- cd /etc then `sudo nano mongodb.conf` nad channge the bind_ip to `0.0.0.0`
+
+- Then restart and enable mongodb 
+    sudo systemctl restart mongodb
+    sudo systemctl enable mongodb
+
+- SSH into web and configure .bashrc and add `export DB_HOST="mongodb://192.168.56.11:27017/posts"` then `source ~/.bashrc` and check print `printenv DB_HOST`
+- Cd app seed node `node seeds/seed.js`
+- then `npm start` and check the browser
 ## IaC configuration management tools are used for push config managemnet and pull config managements?
 
