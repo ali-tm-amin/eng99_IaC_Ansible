@@ -53,10 +53,10 @@ If it doesn’t run update and upgrade ie no internet do step 4 & 5
 step 4: reload controller VM
 
 step 5: repeat steps for agent nodes
-step 6: run the provisioning file ./controller_config.sh
+step 6: run the provisioning file `./controller_config.sh`
 Step7: from the controller run update and upgrade
-ansible all -a "sudo apt-get update -y" from controller vm
-ansible all -a "sudo apt-get upgrade -y" from controller vm
+`ansible all -a "sudo apt-get update -y"` from controller vm
+`ansible all -a "sudo apt-get upgrade -y"` from controller vm
 
 ## Ansible playbook
 - Playbooks are reusable
@@ -67,6 +67,7 @@ ansible all -a "sudo apt-get upgrade -y" from controller vm
 
 ### Creating yml file
 - From the controller VM cd /etc/ansible then run `sudo nano install_nginx.yml`
+
 - Write the codes below:
 
     #this file is to conggure and install nginx in web agent node
@@ -86,6 +87,7 @@ ansible all -a "sudo apt-get upgrade -y" from controller vm
         apt: pkg=ngix state=present
         become_user: root
     #What is the end goal for this task
+
 ![](/images/yml_file.png)
 
 - Run the file `ansible-playbook install_nginx.yml`

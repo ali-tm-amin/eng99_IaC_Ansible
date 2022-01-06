@@ -1,0 +1,35 @@
+---
+- hosts: web
+  gather_facts: true
+  become: true
+  tasks: 
+  - name: install node.js
+    apt: pkg=nodejs state=present 
+    become_user: root 
+
+  - name: NODE | install pm2 
+    npm:
+      name: pm2
+      global: yes 
+  
+  - name: Clone git
+    git:
+      repo: https://github.com/ali-tm-amin/Eng99App.git
+      dest: /home/vagrant/app
+      clone: yes
+      update: yes
+  - name: download latest npm + Mongoose
+    shell: |
+      npm install -g npm@latest
+      npm install mongoose -y
+
+  - name: seed + run app
+    shell: |
+      cd app/app
+      npm install
+      node seeds/seed.js
+      pm2 kill
+      pm2 start app.js
+
+- name: env & source
+    shell: source /home/vagrant/.bashrc && echo export DB_HOST=mongodb://192.168.56.11:27017/posts >> /home/vagrant/.bashrc

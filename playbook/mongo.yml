@@ -1,0 +1,9 @@
+---
+- hosts: db
+  gather_facts: true
+  become: true
+
+  tasks:
+  - name: Install mongoDB to the DB 
+    apt: pkg=mongodb state=present
+    become_user: root
