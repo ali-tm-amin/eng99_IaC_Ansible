@@ -11,6 +11,6 @@
 #What task do we wnt to perform in this tml file 
   tasks: 
   - name: install Nginx in web Agent Node 
-    apt: pkg=ngix state=present 
+    apt: pkg=nginx state=present 
     become_user: root 
 #What is the end goal for this task

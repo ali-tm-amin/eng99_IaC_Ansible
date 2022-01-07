@@ -53,7 +53,9 @@ If it doesn’t run update and upgrade ie no internet do step 4 & 5
 step 4: reload controller VM
 
 step 5: repeat steps for agent nodes
+
 step 6: run the provisioning file `./controller_config.sh`
+
 Step7: from the controller run update and upgrade
 `ansible all -a "sudo apt-get update -y"` from controller vm
 `ansible all -a "sudo apt-get upgrade -y"` from controller vm
@@ -131,3 +133,71 @@ Step7: from the controller run update and upgrade
 - then `npm start` and check the browser
 ## IaC configuration management tools are used for push config managemnet and pull config managements?
 
+
+-----
+
+### Importing playbooks
+  ---
+  #Run Mongodb Playbook
+  - name: Running MongoDB Playbook
+    import_playbook: mongodb.yml
+
+  #Run Nginx Playbook
+  - name: Running Nginx Playbook
+    import_playbook: nginx_proxy.yml
+#### SSH into aws app through controller
+- We need to have the eng99.pem to be able ssh to aws ec2
+- We need to install dependencies to set up Ansible Vault to secure our AWS access and secret keys
+- Let's install the them using the script
+        
+        !#/bin/bash
+        sudo apt update -y
+        sudo apt-get install tree -y
+        sudo apt-add-repository --yes --update ppa:ansible/ansible
+        sudo apt install ansible -y
+        sudo apt install python3-pip
+
+        pip3 install awscli 
+        pip3 install boto boto3 -y
+        sudo apt-get upgrade -y
+ - Checking installation `aws --version`
+ - Outcome should be as `aws-cli/1.20.40 Python/3.6.9 Linux/4.15.0-151-generic botocore/1.21.40`
+
+- Let's change python to use python3
+
+- `alias python=python3`
+
+- then needs to run terraform apply to get instances running
+- sudo ssh -i "~/.ssh/eng99.pem" ubuntu@ip..
+- or cd ~/.ssh then ssh into mechine
+- `sudo apt update -y`
+#### Let's create Ansible vault file to secure our AWS keys
+
+- cd `/etc/ansible` then create a folder `sudo mkdir group_vars`
+- cd group_vars then create a nother folder 
+- `sudo mkdir all`, then `cd all`
+- run `sudo ansible-vault create pass.yml`
+- aws_access_key and aws_secret_key copy your keys
+- to save the file press `esc` then type `:wq!` then enter
+- for editing the file `ansible-vault edit pass.yml`
+- `sudo cat pass.yml` it's encrypted now
+- change the hosts file and add aws ip 
+
+    [aws]
+    ec2-instance ansible_host=54.74.243.133 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/eng99.pem
+    [db]
+    ec2-instance ansible_host=34.253.155.134 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/eng99.pem
+
+- ssh into aws instance and run update then exit and back to controller
+- navigate to `/etc/ansibale` then
+- now run `ansible aws -m ping --ask-vault-pass`
+- `sudo chmod 666 pass.yml`
+### Run playbooks
+- Navigate to `/etc/ansible` then create and run the playbooks:
+1. Create nodejs.yml `sudo nano pass.yml nodejs.yml`
+- Run it `sudo ansible-playbook --ask-vault-pass nodejs.yml`
+2. Create nginx.yml `sudo nano pass.yml nginx.yml`
+- Run it`sudo ansible-playbook --ask-vault-pass nginx.yml`
+3. Create mongo.yml `sudo nano pass.yml mongo.yml`
+- Then run it `sudo ansible-playbook --ask-vault-pass mongo.yml`
+- Check nginx status `sudo ansible aws -a "sudo systemctl status nginx" --ask-vault-pass`

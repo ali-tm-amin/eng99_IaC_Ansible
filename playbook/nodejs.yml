@@ -31,5 +31,5 @@
       pm2 kill
       pm2 start app.js
 
-- name: env & source
-    shell: source /home/vagrant/.bashrc && echo export DB_HOST=mongodb://192.168.56.11:27017/posts >> /home/vagrant/.bashrc
+#- name: env & source
+#    shell: source /home/vagrant/.bashrc && echo export DB_HOST=mongodb://192.168.56.11:27017/posts >> /home/vagrant/.bashrc
