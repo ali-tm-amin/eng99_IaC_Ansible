@@ -1,10 +1,10 @@
-[aws]
-ec2-instance ansible_host=54.74.243.133 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/eng99.pem
-[db]
-ec2-instance ansible_host=34.253.155.134 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/eng99.pem
-
-#[web]
-#192.168.56.10 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
-
+#[aws]
+#ec2-instance ansible_host=54.74.243.133 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/eng99.pem
 #[db]
-#192.168.56.11 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+#ec2-instance ansible_host=34.253.155.134 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/eng99.pem
+
+[web]
+192.168.56.10 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+
+[db]
+192.168.56.11 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant

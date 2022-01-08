@@ -12,36 +12,55 @@
 
 2. Run update and upgrade commands for each VMs
 
-- SSH into controller `vagrant ssh controller`
+- SSH into controller `vagrant ssh controller`, default password is `vagrant`
 
 
 - `sudo apt-get update -y`
 
 - `sudo apt-get upgrade -y`
 
-- Exit controller and ssh into web and db and repeate above process
-3. Setting up ansible controller
+- Exit controller and ssh into web `vagrant ssh web` and db and repeate update and upgrade
+
+3. A- Setting up ansible controller
 - These are provisioned and copied into Vagrantfile
   - controller.vm.synced_folder "./provisions", "/home/vagrant/controller"
-     
+
+4. B- Accessing the other instances through the controller:
+- Navigate to /etc/ansible
+- Remove origin_hosts and create new one `sudo nano hosts`
+- Add these to the file and save it
+
+  [web]
+  192.168.56.10 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+  [db]
+  192.168.56.11 ansible_connection=ssh ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+      
+- To access other instances through controller manually `ssh vagrant@192.168.56.10`
+- To do it remotey through controller we need add these lines to make it known host
+
+    ssh-keyscan -H 192.168.56.10 >> ~/.ssh/known_hosts
+    ssh-keyscan -H 192.168.56.11 >> ~/.ssh/known_hosts
+
+
 4. Now you can adhoc commands:
 
 ping all servers with a single command
 - To know what servers we have `sudo ansible all -m ping`
 
-- `ansible web -a "uname -a"`
+- `sudo ansible web -a "uname -a"`
 
-- `ansible all -a "uname -a"`
+- `sudo ansible all -a "uname -a"`
 
-- `ansible all -a "whoami"`
+- `sudo ansible all -a "whoami"`
 
-- `ansible all -a "date"`
+- `sudo ansible all -a "date"`
 
-- `ansible web -a "free"`
+- `sudo ansible web -a "free"`
 
 
-- All facts `ansible all -m ansible.builtin.setup`
+- All facts `sudo ansible all -m ansible.builtin.setup`
 
+### Reload the VMs
 
 step 1: 3 machines running
 
@@ -57,8 +76,8 @@ step 5: repeat steps for agent nodes
 step 6: run the provisioning file `./controller_config.sh`
 
 Step7: from the controller run update and upgrade
-`ansible all -a "sudo apt-get update -y"` from controller vm
-`ansible all -a "sudo apt-get upgrade -y"` from controller vm
+`sudo ansible all -a "sudo apt update -y"` from controller vm
+`sudo ansible all -a "sudo apt upgrade -y"` from controller vm
 
 ## Ansible playbook
 - Playbooks are reusable
@@ -68,7 +87,7 @@ Step7: from the controller run update and upgrade
 - YAML syntax and ext: file.yml and file.yaml, file.yml start with ---- three dashes
 
 ### Creating yml file
-- From the controller VM cd /etc/ansible then run `sudo nano install_nginx.yml`
+- From the controller VM cd /etc/ansible then run `sudo nano nginx.yml`
 
 - Write the codes below:
 
@@ -92,10 +111,10 @@ Step7: from the controller run update and upgrade
 
 ![](/images/yml_file.png)
 
-- Run the file `ansible-playbook install_nginx.yml`
+- Run the file `sudo ansible-playbook nginx.yml`
 ![](/images/playbook_nginx.png)
 
-- Run adhoc command `ansible web -a "sudo systemctl status nginx"`
+- Run adhoc command `sudo ansible web -a "sudo systemctl status nginx"`
 ![](/images/nginx_status.png)
 
 #### Task:
@@ -103,10 +122,10 @@ Step7: from the controller run update and upgrade
 - copy the app folder
 - npm install then npm start
 - end goal to see node running in our browser port 3000 
--Ceating playbook file: `sudo nano install_nodejs.yml`
+-Ceating playbook file: `sudo nano nodejs.yml`
 ![](/images/nodejs_yml.png)
 
-- ansible-playbook install_nodejs.yml
+- Run the file `sudo ansible-playbook nodejs.yml`
 ![](/images/node_playbook.png)
 
 - SSH into app from controller `ssh vagrant@192.168.56.10`
@@ -115,11 +134,11 @@ Step7: from the controller run update and upgrade
 ![](/images/port3000.png)
 
 ### Installing mongodb
-- Creating playbook file `sudo nano install_mongo.yml`
+- Creating playbook file `sudo nano mongo.yml`
 ![](/images/mongo_yml.png)
-- Check for any errors `ansible-playbook install_mongo.yml --syntax-check`
-- Run the playbook `ansible-playbook install_mongo.yml`
-- Check mongodb status `ansible db -a "systemctl status mongodb"`
+- Check for any errors `sudo ansible-playbook mongo.yml --syntax-check`
+- Run the playbook `sudo ansible-playbook mongo.yml`
+- Check mongodb status `sudo ansible db -a "systemctl status mongodb"`
 ![](/images/mongodb_status.png)
 - Now ssh into db and configure mongodb `ssh vagrant@192.168.56.11`
 - cd /etc then `sudo nano mongodb.conf` nad channge the bind_ip to `0.0.0.0`
@@ -128,7 +147,7 @@ Step7: from the controller run update and upgrade
     sudo systemctl restart mongodb
     sudo systemctl enable mongodb
 
-- SSH into web and configure .bashrc and add `export DB_HOST="mongodb://192.168.56.11:27017/posts"` then `source ~/.bashrc` and check print `printenv DB_HOST`
+- SSH into web and configure .bashrc and add `export DB_HOST="mongodb://192.168.56.10:27017/posts"` then `source ~/.bashrc` and check print `printenv DB_HOST`
 - Cd app seed node `node seeds/seed.js`
 - then `npm start` and check the browser
 ## IaC configuration management tools are used for push config managemnet and pull config managements?
@@ -140,11 +159,12 @@ Step7: from the controller run update and upgrade
   ---
   #Run Mongodb Playbook
   - name: Running MongoDB Playbook
-    import_playbook: mongodb.yml
+    import_playbook: mongo.yml
 
   #Run Nginx Playbook
   - name: Running Nginx Playbook
-    import_playbook: nginx_proxy.yml
+    import_playbook: nginx.yml
+
 #### SSH into aws app through controller
 - We need to have the eng99.pem to be able ssh to aws ec2
 - We need to install dependencies to set up Ansible Vault to secure our AWS access and secret keys
@@ -192,6 +212,7 @@ Step7: from the controller run update and upgrade
 - navigate to `/etc/ansibale` then
 - now run `ansible aws -m ping --ask-vault-pass`
 - `sudo chmod 666 pass.yml`
+
 ### Run playbooks
 - Navigate to `/etc/ansible` then create and run the playbooks:
 1. Create nodejs.yml `sudo nano pass.yml nodejs.yml`

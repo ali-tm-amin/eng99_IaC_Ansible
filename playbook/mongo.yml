@@ -3,10 +3,7 @@
 # Note - Ensure the node-app and mongodb required dependencies are available in the specified location
 
 ---
-#name: import Mongo
-#import playbook: install mongo.yml
-#name: Import Node
-#import playbook: install nodejs
+
 - hosts: db
 
   gather_facts: yes
