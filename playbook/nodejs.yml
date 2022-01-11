@@ -1,11 +1,11 @@
 ---
  #Run Mongodb Playbook
-  - name: Running MongoDB Playbook
-    import_playbook: mongo.yml
+  #- name: Running MongoDB Playbook
+  #  import_playbook: mongo.yml
 
   #Run Nginx Playbook
-  - name: Running Nginx Playbook
-    import_playbook: nginx.yml
+  #- name: Running Nginx Playbook
+  #  import_playbook: nginx.yml
 
 - hosts: web
   gather_facts: true
