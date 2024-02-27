@@ -2,13 +2,13 @@ sudo apt-get update -y
 sudo apt-get upgrade -y
 ls
 ./controller_config.sh
-ansible all -a "sudo apt-get update -y"
+sudo ansible all -a "sudo apt update -y"
 cd /ect
 ls
 cd /etc
 cd ansible
 ls
-ansible all -a "sudo apt-get update -y"
+sudo ansible all -a "sudo apt update -y"
 ls -la
 cat ansible.cfg 
 ssh vagrant@192.168.56.10

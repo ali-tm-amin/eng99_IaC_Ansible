@@ -1,14 +1,14 @@
 
    
 # Update
-sudo apt-get update -y
-sudo apt-get upgrade -y
+sudo apt update -y
+sudo apt upgrade -y
 
 # Install
-sudo apt-get install software-properties-common
+sudo apt install software-properties-common
 sudo apt-add-repository ppa:ansible/ansible -y
-sudo apt-get install ansible -y
-#sudo apt-get install sshpass 
+sudo apt install ansible -y
+sudo apt install sshpass 
 #Install Tree
 sudo apt install tree -y
 
@@ -18,7 +18,7 @@ sudo apt install python3-pip -y
 # Install aws cli
 pip3 install awscli
 pip3 install boto boto3
-sudo apt-get upgrade -y
+sudo apt upgrade -y
 
 #To use python3
 alias python=python3

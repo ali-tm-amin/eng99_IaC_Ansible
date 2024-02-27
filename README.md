@@ -140,7 +140,7 @@ Step7: from the controller run update and upgrade
 
       - export DB_HOST="mongodb://192.168.56.10:27017/posts"  
       - source ~/.bashrc  
-      - printenv DB_HOST
+      - printenv DB_HOSTi
       - Cd app and seed node: node seeds/seed.js
       - then npm start and check the browser if the app is running
 
@@ -158,8 +158,8 @@ Step7: from the controller run update and upgrade
 
 #### SSH into aws app through controller
 
-- We need to have the eng99.pem to be able ssh to aws ec2
-- To copy the eng99.pem folder from local to vagrant follow these comands below:
+- We need to have the devops.pem to be able ssh to aws ec2
+- To copy the devops.pem folder from local to vagrant follow these comands below:
 
       - first `vagrant plugin install vagrant-scp`
       - then `vagrant scp <some_local_file_or_dir> [vm_name]:<somewhere_on_the_vm>`
@@ -187,7 +187,7 @@ Step7: from the controller run update and upgrade
 - `alias python=python3`
 
 - then needs to run terraform apply to get instances running
-- sudo ssh -i "~/.ssh/eng99.pem" ubuntu@ip..
+- sudo ssh -i "~/.ssh/devops.pem" ubuntu@ip..
 - or cd ~/.ssh then ssh into mechine
 - `sudo apt update -y`
 
@@ -206,9 +206,9 @@ Step7: from the controller run update and upgrade
 - change the hosts file and add aws ip 
 
       [aws]
-      ec2-instance ansible_host=54.74.243.133 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/eng99.pem
+      ec2-instance ansible_host=54.74.243.133 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/devops.pem
       [db]
-      ec2-instance ansible_host=34.253.155.134 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/eng99.pem
+      ec2-instance ansible_host=34.253.155.134 ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/devops.pem
 
 - ssh into aws instance and run update then exit and back to controller
 - navigate to `/etc/ansibale` then

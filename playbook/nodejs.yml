@@ -18,7 +18,12 @@
   - name: Install NPM
     apt: pkg=npm state=present
 
-
+  - name: Install git
+    apt:
+      name: git
+      state: present
+      update_cache: yes
+      
   - name: Clone git
     git:
       repo: https://github.com/ali-tm-amin/Eng99App.git
@@ -35,7 +40,7 @@
     npm:
       name: pm2
       global: yes
-
+  
   - name: seed + run app
     shell: |
       cd app/app
